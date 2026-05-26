@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { ToastProvider } from "@/components/Toast";
 
 function NotFoundComponent() {
   return (
@@ -72,14 +73,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "ODIN — Cobertura de diagnóstico" },
+      { name: "description", content: "Consulta de funções de diagnóstico automotivo por veículo. Uso interno." },
+      { name: "author", content: "ODIN" },
+      { property: "og:title", content: "ODIN — Cobertura de diagnóstico" },
+      { property: "og:description", content: "Consulta de funções de diagnóstico automotivo por veículo. Uso interno." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -113,7 +112,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <ToastProvider>
+        <Outlet />
+      </ToastProvider>
     </QueryClientProvider>
   );
 }
