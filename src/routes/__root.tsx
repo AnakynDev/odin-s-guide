@@ -4,11 +4,16 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+<<<<<<< HEAD
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+=======
+} from "@tanstack/react-router";
+
+>>>>>>> 8d67da8 (chore: initial commit - Vite SPA setup)
 import { ToastProvider } from "@/components/Toast";
 
 function NotFoundComponent() {
@@ -69,6 +74,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+<<<<<<< HEAD
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -88,11 +94,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
   }),
   shellComponent: RootShell,
+=======
+>>>>>>> 8d67da8 (chore: initial commit - Vite SPA setup)
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
 
+<<<<<<< HEAD
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -107,6 +116,8 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+=======
+>>>>>>> 8d67da8 (chore: initial commit - Vite SPA setup)
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 

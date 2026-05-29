@@ -1,18 +1,28 @@
 {
+<<<<<<< HEAD
   "name": "tanstack_start_ts",
+=======
+  "name": "odin-guide",
+>>>>>>> 8d67da8 (chore: initial commit - Vite SPA setup)
   "private": true,
   "sideEffects": false,
   "type": "module",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
+<<<<<<< HEAD
     "build:dev": "vite build --mode development",
+=======
+>>>>>>> 8d67da8 (chore: initial commit - Vite SPA setup)
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
   "dependencies": {
+<<<<<<< HEAD
     "@cloudflare/vite-plugin": "^1.25.5",
+=======
+>>>>>>> 8d67da8 (chore: initial commit - Vite SPA setup)
     "@fontsource/inter": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@hookform/resolvers": "^5.2.2",
@@ -45,7 +55,10 @@
     "@tailwindcss/vite": "^4.2.1",
     "@tanstack/react-query": "^5.83.0",
     "@tanstack/react-router": "^1.168.25",
+<<<<<<< HEAD
     "@tanstack/react-start": "^1.167.50",
+=======
+>>>>>>> 8d67da8 (chore: initial commit - Vite SPA setup)
     "@tanstack/router-plugin": "^1.167.28",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -72,7 +85,10 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
+<<<<<<< HEAD
     "@lovable.dev/vite-tanstack-config": "^1.7.0",
+=======
+>>>>>>> 8d67da8 (chore: initial commit - Vite SPA setup)
     "@types/node": "^22.16.5",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",

@@ -8,8 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
 dist-ssr
+dist
 .output
 .vinxi
 .tanstack/**
@@ -30,3 +30,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+<<<<<<< HEAD
+=======
+
+.claude/
+.lovable
+.vscode/
+>>>>>>> 8d67da8 (chore: initial commit - Vite SPA setup)

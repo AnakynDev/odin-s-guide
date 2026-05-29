@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ]
+=======
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+>>>>>>> 8d67da8 (chore: initial commit - Vite SPA setup)
 }
