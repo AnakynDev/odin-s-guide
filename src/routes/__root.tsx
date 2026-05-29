@@ -4,16 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
-<<<<<<< HEAD
-  HeadContent,
-  Scripts,
 } from "@tanstack/react-router";
-
-import appCss from "../styles.css?url";
-=======
-} from "@tanstack/react-router";
-
->>>>>>> 8d67da8 (chore: initial commit - Vite SPA setup)
 import { ToastProvider } from "@/components/Toast";
 
 function NotFoundComponent() {
@@ -74,50 +65,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-<<<<<<< HEAD
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ODIN — Cobertura de diagnóstico" },
-      { name: "description", content: "Consulta de funções de diagnóstico automotivo por veículo. Uso interno." },
-      { name: "author", content: "ODIN" },
-      { property: "og:title", content: "ODIN — Cobertura de diagnóstico" },
-      { property: "og:description", content: "Consulta de funções de diagnóstico automotivo por veículo. Uso interno." },
-      { property: "og:type", content: "website" },
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-    ],
-  }),
-  shellComponent: RootShell,
-=======
->>>>>>> 8d67da8 (chore: initial commit - Vite SPA setup)
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
-
-<<<<<<< HEAD
-function RootShell({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
-
-=======
->>>>>>> 8d67da8 (chore: initial commit - Vite SPA setup)
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
