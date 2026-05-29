@@ -7,15 +7,42 @@ import { GlobalCodeSearch } from "@/components/GlobalCodeSearch";
 import { SearchHistory } from "@/components/SearchHistory";
 import { VehicleResult } from "@/components/VehicleResult";
 import { findVehicle, useVehicleStore } from "@/store/useVehicleStore";
+import type { Vehicle } from "@/types";
 
 export const Route = createFileRoute("/")({
   component: Consulta,
 });
 
+type Match = { make: string; vehicle: Vehicle; highlightCode?: string };
 type SearchResult =
   | { state: "idle" }
   | { state: "not_found"; query: CascadeValue }
-  | { state: "found"; make: string; vehicleId: string; highlightCode?: string };
+  | { state: "found"; matches: Match[] };
+
+function filterVehicles(
+  data: Record<string, Vehicle[]>,
+  q: CascadeValue,
+): Match[] {
+  const out: Match[] = [];
+  for (const [make, list] of Object.entries(data)) {
+    if (q.make && make !== q.make) continue;
+    for (const v of list) {
+      if (q.model && v.model !== q.model) continue;
+      if (q.year && String(v.year) !== q.year) continue;
+      if (q.engine && v.engine !== q.engine) continue;
+      out.push({ make, vehicle: v });
+    }
+  }
+  // Stable order: make, model, year desc, engine
+  out.sort((a, b) => {
+    if (a.make !== b.make) return a.make.localeCompare(b.make);
+    if (a.vehicle.model !== b.vehicle.model)
+      return a.vehicle.model.localeCompare(b.vehicle.model);
+    if (a.vehicle.year !== b.vehicle.year) return b.vehicle.year - a.vehicle.year;
+    return a.vehicle.engine.localeCompare(b.vehicle.engine);
+  });
+  return out;
+}
 
 function Consulta() {
   const data = useVehicleStore((s) => s.data);
@@ -26,21 +53,28 @@ function Consulta() {
 
   const runSearch = (override?: CascadeValue) => {
     const f = override ?? fields;
-    if (!f.make || !f.model || !f.year || !f.engine) return;
-    const year = parseInt(f.year, 10);
-    if (isNaN(year)) return;
-    const v = findVehicle(data, f.make, f.model, year, f.engine);
-    if (!v) {
+    const anyFilled = !!(f.make || f.model || f.year || f.engine);
+    if (!anyFilled) return;
+    const matches = filterVehicles(data, f);
+    if (matches.length === 0) {
       setResult({ state: "not_found", query: f });
       return;
     }
-    addToHistory({
-      make: f.make,
-      model: f.model,
-      year,
-      engine: f.engine,
-    });
-    setResult({ state: "found", make: f.make, vehicleId: v.id });
+    // Add to history only when result is uniquely identified (all 4 set)
+    if (f.make && f.model && f.year && f.engine) {
+      addToHistory({
+        make: f.make,
+        model: f.model,
+        year: parseInt(f.year, 10),
+        engine: f.engine,
+      });
+    }
+    setResult({ state: "found", matches });
+  };
+
+  const handleClear = () => {
+    setFields(EMPTY);
+    setResult({ state: "idle" });
   };
 
   const handlePickHistory = (entry: {
@@ -83,11 +117,8 @@ function Consulta() {
       });
       setResult({
         state: "found",
-        make: r.make,
-        vehicleId: v.id,
-        highlightCode: r.code,
+        matches: [{ make: r.make, vehicle: v, highlightCode: r.code }],
       });
-      // scroll
       setTimeout(() => {
         document
           .getElementById(`fn-${r.code}`)
@@ -96,18 +127,22 @@ function Consulta() {
     }
   };
 
-  // Recompute current vehicle reference from store (for live deletions)
-  const currentVehicle = useMemo(() => {
-    if (result.state !== "found") return undefined;
-    return data[result.make]?.find((v) => v.id === result.vehicleId);
+  // Re-derive matches from store so deletions update live.
+  const liveMatches: Match[] | null = useMemo(() => {
+    if (result.state !== "found") return null;
+    return result.matches
+      .map((m) => {
+        const v = data[m.make]?.find((x) => x.id === m.vehicle.id);
+        return v ? { ...m, vehicle: v } : null;
+      })
+      .filter((m): m is Match => m !== null);
   }, [result, data]);
 
-  // If vehicle disappeared (rare), reset
   useEffect(() => {
-    if (result.state === "found" && !currentVehicle) {
+    if (result.state === "found" && liveMatches && liveMatches.length === 0) {
       setResult({ state: "idle" });
     }
-  }, [result, currentVehicle]);
+  }, [result, liveMatches]);
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-base)" }}>
@@ -120,12 +155,8 @@ function Consulta() {
           >
             Consulta de cobertura
           </h1>
-          <p
-            className="mt-1 text-sm"
-            style={{ color: "var(--text-muted)" }}
-          >
-            Selecione montadora, modelo, ano e motorização para ver as funções
-            suportadas.
+          <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
+            Pesquise por montadora, modelo, ano ou motor — em qualquer combinação.
           </p>
         </header>
 
@@ -140,6 +171,7 @@ function Consulta() {
             value={fields}
             onChange={setFields}
             onSubmit={() => runSearch()}
+            onClear={handleClear}
           />
           <GlobalCodeSearch onPick={handlePickGlobalResult} />
         </section>
@@ -152,7 +184,7 @@ function Consulta() {
             style={{ color: "var(--text-muted)" }}
           >
             <Info size={16} />
-            Selecione o veículo para ver a cobertura de funções.
+            Preencha ao menos um campo para ver a cobertura.
           </div>
         )}
 
@@ -169,34 +201,39 @@ function Consulta() {
               style={{ color: "var(--warning)", flexShrink: 0, marginTop: 2 }}
             />
             <div className="text-sm">
-              <div
-                className="font-medium"
-                style={{ color: "var(--text-primary)" }}
-              >
-                Este veículo não consta na cobertura atual.
+              <div className="font-medium" style={{ color: "var(--text-primary)" }}>
+                Nenhum veículo corresponde aos filtros.
               </div>
-              <div
-                className="mt-1"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                {result.query.make} {result.query.model} {result.query.year} ·{" "}
-                {result.query.engine} não foi encontrado na base de dados. Para
-                adicionar, use a aba{" "}
-                <span style={{ color: "var(--accent-hover)" }}>
-                  + Adicionar
-                </span>
-                .
+              <div className="mt-1" style={{ color: "var(--text-secondary)" }}>
+                {[result.query.make, result.query.model, result.query.year, result.query.engine]
+                  .filter(Boolean)
+                  .join(" · ")}{" "}
+                não retornou resultados. Ajuste os filtros ou use a aba{" "}
+                <span style={{ color: "var(--accent)" }}>+ Adicionar</span>.
               </div>
             </div>
           </div>
         )}
 
-        {result.state === "found" && currentVehicle && (
-          <VehicleResult
-            make={result.make}
-            vehicle={currentVehicle}
-            highlightCode={result.highlightCode}
-          />
+        {result.state === "found" && liveMatches && liveMatches.length > 0 && (
+          <>
+            <div
+              className="mt-6 text-[12px] font-medium uppercase tracking-wider"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              {liveMatches.length} {liveMatches.length === 1 ? "veículo" : "veículos"} encontrados
+            </div>
+            <div className="space-y-8 mt-2">
+              {liveMatches.map((m) => (
+                <VehicleResult
+                  key={`${m.make}-${m.vehicle.id}`}
+                  make={m.make}
+                  vehicle={m.vehicle}
+                  highlightCode={m.highlightCode}
+                />
+              ))}
+            </div>
+          </>
         )}
       </main>
     </div>

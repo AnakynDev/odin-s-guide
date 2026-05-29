@@ -9,31 +9,31 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ODIN palette — dark only */
+/* ODIN palette — light */
 :root {
-  --bg-base: #0f1013;
-  --bg-surface: #16181d;
-  --bg-elevated: #1e2128;
-  --bg-overlay: #252830;
+  --bg-base: #ffffff;
+  --bg-surface: #fafafa;
+  --bg-elevated: #ffffff;
+  --bg-overlay: #ffffff;
 
-  --text-primary: #e8e6e1;
-  --text-secondary: #9e9c99;
-  --text-muted: #5c5b58;
+  --text-primary: #0a0a0a;
+  --text-secondary: #525252;
+  --text-muted: #a3a3a3;
 
-  --accent: #3b82f6;
-  --accent-hover: #60a5fa;
-  --accent-subtle: rgba(59, 130, 246, 0.12);
+  --accent: #00678c;
+  --accent-hover: #00567a;
+  --accent-subtle: rgba(0, 103, 140, 0.1);
 
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --danger-subtle: rgba(239, 68, 68, 0.12);
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --danger-subtle: rgba(220, 38, 38, 0.08);
 
-  --border: #2a2d35;
-  --border-subtle: #1e2128;
+  --border: #d4d4d4;
+  --border-subtle: #ececec;
 
-  --tag-actuation: #3b82f6;
-  --tag-special: #8b5cf6;
+  --tag-actuation: #00678c;
+  --tag-special: #7c3aed;
 
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -96,67 +96,37 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--bg-elevated);
+    background: #e5e5e5;
     border-radius: 5px;
     border: 2px solid var(--bg-base);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--border);
+    background: #c4c4c4;
   }
 }
 
 /* Animations */
 @keyframes odin-fade-slide-down {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @keyframes odin-fade-slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @keyframes odin-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @keyframes odin-toast-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.odin-anim-dropdown {
-  animation: odin-fade-slide-down 120ms ease-out;
-}
-.odin-anim-result {
-  animation: odin-fade-slide-up 180ms ease-out;
-}
-.odin-anim-fade {
-  animation: odin-fade-in 150ms ease-out;
-}
-.odin-anim-toast {
-  animation: odin-toast-in 200ms ease-out;
-}
+.odin-anim-dropdown { animation: odin-fade-slide-down 120ms ease-out; }
+.odin-anim-result   { animation: odin-fade-slide-up 180ms ease-out; }
+.odin-anim-fade     { animation: odin-fade-in 150ms ease-out; }
+.odin-anim-toast    { animation: odin-toast-in 200ms ease-out; }
 
 @media (prefers-reduced-motion: reduce) {
   .odin-anim-dropdown,
@@ -165,7 +135,5 @@
   .odin-anim-toast {
     animation: odin-fade-in 80ms linear;
   }
-  * {
-    transition-duration: 0.01ms !important;
-  }
+  * { transition-duration: 0.01ms !important; }
 }
