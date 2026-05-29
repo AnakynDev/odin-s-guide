@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Search, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import logoUrl from "@/assets/odin-logo.svg";
 
 const TABS = [
   { to: "/", label: "Consulta", icon: Search },
@@ -11,19 +12,16 @@ export function Tabs() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   return (
     <nav
-      className="flex items-center gap-1 px-4 h-12 border-b"
+      className="flex items-center gap-1 px-4 h-14 border-b"
       style={{
         borderColor: "var(--border)",
         background: "var(--bg-surface)",
       }}
       aria-label="Navegação principal"
     >
-      <div
-        className="font-semibold text-sm tracking-wider mr-6 select-none"
-        style={{ color: "var(--text-primary)" }}
-      >
-        ODIN
-      </div>
+      <Link to="/" className="mr-6 flex items-center select-none" aria-label="ODIN">
+        <img src={logoUrl} alt="ODIN" className="h-7 w-auto" />
+      </Link>
       {TABS.map((t) => {
         const active = path === t.to;
         const Icon = t.icon;
@@ -32,7 +30,7 @@ export function Tabs() {
             key={t.to}
             to={t.to}
             className={cn(
-              "relative inline-flex items-center gap-2 px-3 h-12 text-sm transition-colors",
+              "relative inline-flex items-center gap-2 px-3 h-14 text-sm transition-colors",
             )}
             style={{
               color: active ? "var(--text-primary)" : "var(--text-secondary)",
